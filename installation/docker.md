@@ -157,4 +157,33 @@ services:
 ...
 ```
 
+## 问题
+
+* 如果你看到关于打开文件数限制的警告，可以尝试在容器外设置ulimit:
+```
+$ docker run --ulimit nofile=64000:64000 ...
+```
+
+* devicemapper存储驱动在有些系统上会产生关于Graylogs磁盘日志的问题。如果发生这种情况，可以使用 aufs 或 overlay等[其他驱动](https://docs.docker.com/engine/userguide/storagedriver/selectadriver)。
+
+## 编译
+
+从头开始编译镜像:
+```
+$ docker build --build-arg GRAYLOG_VERSION=${GRAYLOG_VERSION} -t graylog2/server .
+```
+
+## 应用到生产环境
+
+你可以使用 OVA，Docker，Aws等方式部署 Graylog，请务必加强 服务器的安全防护。
+
+* 为ubuntu的默认用户设置密码
+* 禁用密码验证的远程登录，启用ssh秘钥登录
+* 设置网络隔离，防止Elasticsearch 和MongoDB 的未授权访问
+* 添加物理内存，并提升java堆的大小
+* 添加硬盘，扩展磁盘空间
+* 将Graylog 接入到监控系统中
+
+如果你想定制安装步骤，可以参考 [其他安装方法](http://docs.graylog.org/en/2.2/pages/installation.html#installing).
+
 
